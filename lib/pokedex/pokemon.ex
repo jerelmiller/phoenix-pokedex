@@ -13,12 +13,14 @@ defmodule Pokedex.Pokemon do
     field :attack, :integer
     field :defense, :integer
     field :description, :string
+    field :height, :decimal
     field :hp, :integer
     field :name, :string
     field :number, :string
     field :special_attack, :integer
     field :special_defense, :integer
     field :speed, :integer
+    field :weight, :decimal
 
     many_to_many :types, Type, join_through: PokemonType
     many_to_many :weaknesses, Type, join_through: PokemonWeakness
