@@ -9,7 +9,7 @@ defmodule PokedexWeb.Endpoint do
   # when deploying your static files in production.
   plug Plug.Static,
     at: "/", from: :pokedex, gzip: false,
-    only: ~w(images)
+    only: ~w(css fonts images js favicon.ico robots.txt)
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
@@ -29,7 +29,6 @@ defmodule PokedexWeb.Endpoint do
   plug Plug.Head
 
   plug Absinthe.Plug, schema: Pokedex.Schema
-  plug Absinthe.Plug.GraphiQL, schema: Pokedex.Schema
 
   @doc """
   Callback invoked for dynamically configuring the endpoint.
