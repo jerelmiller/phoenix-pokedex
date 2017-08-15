@@ -22,27 +22,34 @@ defmodule Data.Pokemon do
   ]
 end
 
+defmodule Data.Created do
+  defstruct types: [], pokemon: []
+end
+
 defmodule DataHelper do
   import Ecto.Query
 
   def create_from_file(file) do
     data = parse_pokemon(file)
 
-    create_types(data)
-    create_pokemon(data)
+    %Data.Created{}
+    |> create_types(data)
+    |> create_pokemon(data)
   end
 
-  defp create_pokemon(data) do
+  defp create_pokemon(created, data) do
     Enum.map(data, &find_or_create_pokemon/1)
+    |> put_pokemon(created)
   end
 
-  defp create_types(data) do
+  defp create_types(created, data) do
     data
     |> Enum.flat_map(fn (pokemon) ->
       pokemon.types ++ pokemon.weaknesses ++ pokemon.strengths
     end)
     |> Enum.uniq
     |> insert_types
+    |> put_types(created)
   end
 
   defp parse_pokemon(file) do
@@ -80,6 +87,9 @@ defmodule DataHelper do
       })
       |> Repo.insert!
   end
+
+  defp put_pokemon(pokemon, created), do: %{created | pokemon: pokemon}
+  defp put_types(types, created), do: %{created | types: types}
 end
 
 DataHelper.create_from_file("priv/repo/pokemon.json")
