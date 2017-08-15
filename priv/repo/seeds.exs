@@ -63,16 +63,16 @@ defmodule DataHelper do
   end
 
   defp find_or_create_type(name) do
-    Repo.one(from t in Pokemon.Type, where: t.name == ^name) ||
-      %Pokemon.Type{}
-      |> Pokemon.Type.changeset(%{name: name})
-      |> Repo.insert!
+    find_or_create(
+      (from t in Pokemon.Type, where: t.name == ^name),
+      Pokemon.Type.changeset(%Pokemon.Type{}, %{name: name})
+    )
   end
 
   defp find_or_create_pokemon(%{name: name} = pokemon) do
-    Repo.one(from p in Pokemon, where: p.name == ^name) ||
-      %Pokemon{}
-      |> Pokemon.changeset(%{
+    find_or_create(
+      (from p in Pokemon, where: p.name == ^name),
+      Pokemon.changeset(%Pokemon{}, %{
         attack: pokemon.attack,
         defense: pokemon.defense,
         description: pokemon.description,
@@ -85,7 +85,11 @@ defmodule DataHelper do
         speed: pokemon.speed,
         weight: pokemon.weight
       })
-      |> Repo.insert!
+    )
+  end
+
+  def find_or_create(query, changeset) do
+    Repo.one(query) || Repo.insert!(changeset)
   end
 
   defp put_pokemon(pokemon, created), do: %{created | pokemon: pokemon}
