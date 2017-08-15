@@ -23,7 +23,7 @@ defmodule Data.Pokemon do
 end
 
 defmodule Data.Created do
-  defstruct types: [], pokemon: []
+  defstruct types: %{}, pokemon: %{}
 end
 
 defmodule DataHelper do
@@ -54,7 +54,7 @@ defmodule DataHelper do
       pokemon.types ++ pokemon.weaknesses ++ pokemon.strengths
     end)
     |> Enum.uniq
-    |> Enum.map(types, &find_or_create_type/1)
+    |> Enum.map(&find_or_create_type/1)
     |> put_types(created)
   end
 
@@ -88,8 +88,14 @@ defmodule DataHelper do
     Repo.one(query) || Repo.insert!(changeset)
   end
 
-  defp put_pokemon(pokemon, created), do: %{created | pokemon: pokemon}
-  defp put_types(types, created), do: %{created | types: types}
+  defp put_pokemon(pokemon, created), do: %{created | pokemon: map_by(:number, pokemon)}
+  defp put_types(types, created), do: %{created | types: map_by(:name, types)}
+
+  defp map_by(key, records) do
+    Enum.reduce(records, %{}, fn (record, map) ->
+      Map.put(map, Map.fetch!(record, key), record.id)
+    end)
+  end
 end
 
 DataHelper.create_from_file("priv/repo/pokemon.json")
