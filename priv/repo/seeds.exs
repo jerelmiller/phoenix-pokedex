@@ -37,6 +37,12 @@ defmodule DataHelper do
     |> create_pokemon(data)
   end
 
+  defp parse_pokemon(file) do
+    file
+    |> File.read!()
+    |> Poison.decode!(as: [%Data.Pokemon{}], keys: :atoms)
+  end
+
   defp create_pokemon(created, data) do
     Enum.map(data, &find_or_create_pokemon/1)
     |> put_pokemon(created)
@@ -48,18 +54,8 @@ defmodule DataHelper do
       pokemon.types ++ pokemon.weaknesses ++ pokemon.strengths
     end)
     |> Enum.uniq
-    |> insert_types
+    |> Enum.map(types, &find_or_create_type/1)
     |> put_types(created)
-  end
-
-  defp parse_pokemon(file) do
-    file
-    |> File.read!()
-    |> Poison.decode!(as: [%Data.Pokemon{}], keys: :atoms)
-  end
-
-  defp insert_types(types) do
-    Enum.map(types, &find_or_create_type/1)
   end
 
   defp find_or_create_type(name) do
