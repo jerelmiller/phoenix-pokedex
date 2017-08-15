@@ -5,6 +5,8 @@ defmodule Pokedex.Pokemon.PokemonType do
   alias Pokedex.Pokemon.{PokemonType, Type}
 
   schema "pokemons_types" do
+    field :order, :integer
+
     belongs_to :pokemon, Pokemon
     belongs_to :type, Type
 
@@ -14,7 +16,7 @@ defmodule Pokedex.Pokemon.PokemonType do
   @doc false
   def changeset(%PokemonType{} = pokemon_type, attrs) do
     pokemon_type
-    |> cast(attrs, [:pokemon_id, :type_id])
-    |> validate_required([:pokemon_id, :type_id])
+    |> cast(attrs, [:order, :pokemon_id, :type_id])
+    |> validate_required([:order, :pokemon_id, :type_id])
   end
 end
