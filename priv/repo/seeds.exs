@@ -25,13 +25,29 @@ end
 defmodule DataHelper do
   import Ecto.Query
 
-  def parse_pokemon(file) do
+  def create_from_file(file) do
+    data = parse_pokemon(file)
+
+    data
+    |> create_types
+  end
+
+  defp create_types(data) do
+    data
+    |> Enum.flat_map(fn (pokemon) ->
+      pokemon.types ++ pokemon.weaknesses ++ pokemon.strengths
+    end)
+    |> Enum.uniq
+    |> insert_types
+  end
+
+  defp parse_pokemon(file) do
     file
     |> File.read!()
     |> Poison.decode!(as: [%Data.Pokemon{}], keys: :atoms)
   end
 
-  def insert_types(types) do
+  defp insert_types(types) do
     Enum.map(types, &find_or_create_type/1)
   end
 
@@ -43,9 +59,4 @@ defmodule DataHelper do
   end
 end
 
-data = DataHelper.parse_pokemon("priv/repo/pokemon.json")
-
-data
-|> Enum.flat_map(fn (pokemon) -> pokemon.types end)
-|> Enum.uniq
-|> DataHelper.insert_types
+DataHelper.create_from_file("priv/repo/pokemon.json")
