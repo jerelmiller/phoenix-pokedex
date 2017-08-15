@@ -21,14 +21,15 @@ defmodule PokedexWeb.Endpoint do
   plug Plug.Logger
 
   plug Plug.Parsers,
-    parsers: [:urlencoded, :multipart, :json, Absinthe.Plug.Parser],
+    parsers: [:urlencoded, :multipart, :json],
     pass: ["*/*"],
     json_decoder: Poison
 
   plug Plug.MethodOverride
   plug Plug.Head
 
-  plug PokedexWeb.Router
+  plug Absinthe.Plug, schema: Pokedex.Schema
+  plug Absinthe.Plug.GraphiQL, schema: Pokedex.Schema
 
   @doc """
   Callback invoked for dynamically configuring the endpoint.
