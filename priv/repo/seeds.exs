@@ -35,6 +35,7 @@ defmodule DataHelper do
     %Data.Created{}
     |> create_types(data)
     |> create_pokemon(data)
+    |> create_pokemon_types(data)
   end
 
   defp parse_pokemon(file) do
@@ -46,6 +47,30 @@ defmodule DataHelper do
   defp create_pokemon(created, data) do
     Enum.map(data, &find_or_create_pokemon/1)
     |> put_pokemon(created)
+  end
+
+  defp create_pokemon_types(created, data) do
+    data
+    |> Enum.with_index
+    |> Enum.each(fn ({pokemon, index}) ->
+      pokemon_id = Map.fetch!(created.pokemon, pokemon.number)
+
+      Enum.each(pokemon.types, fn type ->
+        type_id = Map.fetch!(created.types, type)
+
+        find_or_create(
+          (from pt in Pokemon.PokemonType,
+            where: pt.pokemon_id == ^pokemon_id and pt.type_id == ^type_id),
+          Pokemon.PokemonType.changeset(%Pokemon.PokemonType{}, %{
+            order: index,
+            pokemon_id: pokemon_id,
+            type_id: type_id
+          })
+        )
+      end)
+    end)
+
+    created
   end
 
   defp create_types(created, data) do
