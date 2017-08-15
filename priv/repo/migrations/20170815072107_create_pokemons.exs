@@ -6,6 +6,12 @@ defmodule Pokedex.Repo.Migrations.CreatePokemons do
       add :name, :string, null: false
       add :number, :string, null: false
       add :description, :text
+      add :attack, :integer, null: false
+      add :defense, :integer, null: false
+      add :hp, :integer, null: false
+      add :special_attack, :integer, null: false
+      add :special_defense, :integer, null: false
+      add :speed, :integer, null: false
 
       timestamps()
     end
