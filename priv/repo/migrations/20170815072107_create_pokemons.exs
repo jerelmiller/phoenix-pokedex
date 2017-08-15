@@ -12,6 +12,8 @@ defmodule Pokedex.Repo.Migrations.CreatePokemons do
       add :special_attack, :integer, null: false
       add :special_defense, :integer, null: false
       add :speed, :integer, null: false
+      add :height, :float, precision: 2, null: false
+      add :weight, :float, precision: 2, null: false
 
       timestamps()
     end
