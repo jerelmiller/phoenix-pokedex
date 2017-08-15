@@ -21,7 +21,6 @@ defmodule PokedexWeb do
     quote do
       use Phoenix.Controller, namespace: PokedexWeb
       import Plug.Conn
-      import PokedexWeb.Router.Helpers
       import PokedexWeb.Gettext
     end
   end
@@ -34,17 +33,8 @@ defmodule PokedexWeb do
       # Import convenience functions from controllers
       import Phoenix.Controller, only: [get_flash: 2, view_module: 1]
 
-      import PokedexWeb.Router.Helpers
       import PokedexWeb.ErrorHelpers
       import PokedexWeb.Gettext
-    end
-  end
-
-  def router do
-    quote do
-      use Phoenix.Router
-      import Plug.Conn
-      import Phoenix.Controller
     end
   end
 
