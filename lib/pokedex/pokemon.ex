@@ -2,7 +2,12 @@ defmodule Pokedex.Pokemon do
   use Ecto.Schema
   import Ecto.Changeset
   alias Pokedex.Pokemon
-  alias Pokedex.Pokemon.{PokemonType, PokemonWeakness, Type}
+  alias Pokedex.Pokemon.{
+    PokemonType,
+    PokemonWeakness,
+    PokemonStrength,
+    Type
+  }
 
   schema "pokemons" do
     field :description, :string
@@ -11,6 +16,7 @@ defmodule Pokedex.Pokemon do
 
     many_to_many :types, Type, join_through: PokemonType
     many_to_many :weaknesses, Type, join_through: PokemonWeakness
+    many_to_many :strengths, Type, join_through: PokemonStrength
 
     timestamps()
   end
