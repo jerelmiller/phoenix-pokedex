@@ -134,6 +134,7 @@ defmodule DataHelper do
         description: pokemon.description,
         height: pokemon.height,
         hp: pokemon.hp,
+        involution_id: find_pokemon_id_by_number(pokemon.involution),
         name: pokemon.name,
         number: pokemon.number,
         special_attack: pokemon.special_attack,
@@ -142,6 +143,15 @@ defmodule DataHelper do
         weight: pokemon.weight
       })
     )
+  end
+
+  defp find_pokemon_id_by_number(number) when is_nil(number), do: nil
+
+  defp find_pokemon_id_by_number(number) do
+    case Repo.get_by(Pokemon, number: number) do
+      nil -> nil
+      pokemon -> pokemon.id
+    end
   end
 
   def find_or_create(query, func) when is_function(func) do
