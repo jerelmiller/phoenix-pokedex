@@ -43,17 +43,16 @@ defmodule DataHelper do
   end
 
   defp associate_relationships(pokemon, data) do
-    associate_types(pokemon, data, :types, Pokemon.PokemonType)
-    associate_types(pokemon, data, :weaknesses, Pokemon.PokemonWeakness)
-    associate_types(pokemon, data, :strengths, Pokemon.PokemonStrength)
+    associate_types(pokemon, data.types, Pokemon.PokemonType)
+    associate_types(pokemon, data.weaknesses, Pokemon.PokemonWeakness)
+    associate_types(pokemon, data.strengths, Pokemon.PokemonStrength)
   end
 
-  defp associate_types(pokemon, data, association, schema) do
-    Map.fetch!(data, association)
+  defp associate_types(pokemon, types, schema) do
+    types
+    |> Enum.map(&find_or_create_type/1)
     |> Enum.with_index
     |> Enum.each(fn ({type, order}) ->
-      type = find_or_create_type(type)
-
       find_or_create(
         (from pt in schema,
           where: pt.pokemon_id == ^pokemon.id and pt.type_id == ^type.id),
