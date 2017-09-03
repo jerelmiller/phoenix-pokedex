@@ -46,12 +46,12 @@ defmodule DataHelper do
 
   defp associate_relationships(created, data) do
     data
-    |> Enum.with_index
-    |> Enum.each(fn ({pokemon, order}) ->
+    |> Enum.each(fn (pokemon) ->
       created
-      |> associate_types(pokemon, order, :types, Pokemon.PokemonType)
-      |> associate_types(pokemon, order, :weaknesses, Pokemon.PokemonWeakness)
-      |> associate_types(pokemon, order, :strengths, Pokemon.PokemonStrength)
+      |> associate_types(pokemon, :types, Pokemon.PokemonType)
+      |> associate_types(pokemon, :weaknesses, Pokemon.PokemonWeakness)
+      |> associate_types(pokemon, :strengths, Pokemon.PokemonStrength)
+      |> associate_moves(pokemon)
     end)
   end
 
@@ -60,11 +60,12 @@ defmodule DataHelper do
     |> put_pokemon(created)
   end
 
-  defp associate_types(created, pokemon, order, association, schema) do
+  defp associate_types(created, pokemon, association, schema) do
     pokemon_id = Map.fetch!(created.pokemon, pokemon.number)
 
     Map.fetch!(pokemon, association)
-    |> Enum.each(fn type ->
+    |> Enum.with_index
+    |> Enum.each(fn ({type, order}) ->
       type_id = Map.fetch!(created.types, type)
 
       find_or_create(
