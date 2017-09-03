@@ -14,7 +14,8 @@ defmodule DataHelper do
   import Ecto.Query
 
   def create_from_file(file) do
-    parse_pokemon(file)
+    file
+    |> parse_pokemon()
     |> Enum.each(&create_pokemon/1)
   end
 
