@@ -22,20 +22,12 @@ defmodule Data.Pokemon do
   ]
 end
 
-defmodule Data.Created do
-  defstruct types: %{}, pokemon: %{}
-end
-
 defmodule DataHelper do
   import Ecto.Query
 
   def create_from_file(file) do
-    data = parse_pokemon(file)
-
-    %Data.Created{}
-    |> create_types(data)
-    |> create_pokemon(data)
-    |> associate_relationships(data)
+    parse_pokemon(file)
+    |> Enum.each(&create_pokemon/1)
   end
 
   defp parse_pokemon(file) do
@@ -44,52 +36,34 @@ defmodule DataHelper do
     |> Poison.decode!(as: [%Data.Pokemon{}], keys: :atoms)
   end
 
-  defp associate_relationships(created, data) do
+  defp create_pokemon(data) do
     data
-    |> Enum.each(fn (pokemon) ->
-      created
-      |> associate_types(pokemon, :types, Pokemon.PokemonType)
-      |> associate_types(pokemon, :weaknesses, Pokemon.PokemonWeakness)
-      |> associate_types(pokemon, :strengths, Pokemon.PokemonStrength)
-      |> associate_moves(pokemon)
-    end)
+    |> find_or_create_pokemon()
+    |> associate_relationships(data)
   end
 
-  defp create_pokemon(created, data) do
-    Enum.map(data, &find_or_create_pokemon/1)
-    |> put_pokemon(created)
+  defp associate_relationships(pokemon, data) do
+    associate_types(pokemon, data, :types, Pokemon.PokemonType)
+    associate_types(pokemon, data, :weaknesses, Pokemon.PokemonWeakness)
+    associate_types(pokemon, data, :strengths, Pokemon.PokemonStrength)
   end
 
-  defp associate_types(created, pokemon, association, schema) do
-    pokemon_id = Map.fetch!(created.pokemon, pokemon.number)
-
-    Map.fetch!(pokemon, association)
+  defp associate_types(pokemon, data, association, schema) do
+    Map.fetch!(data, association)
     |> Enum.with_index
     |> Enum.each(fn ({type, order}) ->
-      type_id = Map.fetch!(created.types, type)
+      type = find_or_create_type(type)
 
       find_or_create(
         (from pt in schema,
-          where: pt.pokemon_id == ^pokemon_id and pt.type_id == ^type_id),
+          where: pt.pokemon_id == ^pokemon.id and pt.type_id == ^type.id),
         schema.changeset(struct(schema), %{
           order: order,
-          pokemon_id: pokemon_id,
-          type_id: type_id
+          pokemon_id: pokemon.id,
+          type_id: type.id
         })
       )
     end)
-
-    created
-  end
-
-  defp create_types(created, data) do
-    data
-    |> Enum.flat_map(fn (pokemon) ->
-      pokemon.types ++ pokemon.weaknesses ++ pokemon.strengths
-    end)
-    |> Enum.uniq
-    |> Enum.map(&find_or_create_type/1)
-    |> put_types(created)
   end
 
   defp find_or_create_type(name) do
@@ -120,15 +94,6 @@ defmodule DataHelper do
 
   def find_or_create(query, changeset) do
     Repo.one(query) || Repo.insert!(changeset)
-  end
-
-  defp put_pokemon(pokemon, created), do: %{created | pokemon: map_by(:number, pokemon)}
-  defp put_types(types, created), do: %{created | types: map_by(:name, types)}
-
-  defp map_by(key, records) do
-    Enum.reduce(records, %{}, fn (record, map) ->
-      Map.put(map, Map.fetch!(record, key), record.id)
-    end)
   end
 end
 
