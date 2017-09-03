@@ -4,6 +4,7 @@ defmodule Pokedex.Schema.Types do
 
   alias Pokedex.Resolvers.{Lookup, Pokemon, Move}
 
+  @desc "Represents a possible move a pokemon can acquire"
   object :move do
     field :level, :integer
 
@@ -28,11 +29,13 @@ defmodule Pokedex.Schema.Types do
     field :move_method, :move_method, resolve: assoc(:move_method)
   end
 
+  @desc "Represents how a move is acquired by a pokemon"
   object :move_method do
     field :name, non_null(:string)
     field :description, non_null(:string)
   end
 
+  @desc "Represents a pokemon"
   object :pokemon do
     field :id, :id
     field :attack, :integer
