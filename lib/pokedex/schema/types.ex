@@ -95,5 +95,9 @@ defmodule Pokedex.Schema.Types do
     @desc "The evolution chain for the pokemon"
     field :evolutions, list_of(:pokemon),
       resolve: &Pokemon.evolutions/3
+
+    @desc "URL location of the image for the pokemon"
+    field :image, non_null(:string),
+      resolve: &Pokemon.image/3
   end
 end

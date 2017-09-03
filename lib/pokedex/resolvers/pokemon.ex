@@ -27,5 +27,10 @@ defmodule Pokedex.Resolvers.Pokemon do
     {:ok, evolutions}
   end
 
+  def image(%{number: number, name: name}, _, _) do
+    {:ok, "#{base_url()}/images/#{number}#{name}.png"}
+  end
+
   defp preload_moves(query, _, _), do: Query.preload_moves(query)
+  defp base_url, do: PokedexWeb.Endpoint.url()
 end
