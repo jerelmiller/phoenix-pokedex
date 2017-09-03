@@ -98,7 +98,7 @@ defmodule DataHelper do
 
         Pokemon.Move.changeset(%Pokemon.Move{}, %{
           accuracy: move.accuracy,
-          effect_change: move.effect_chance,
+          effect_chance: move.effect_chance,
           effect_id: effect.id,
           name: move.name,
           power: move.power,
