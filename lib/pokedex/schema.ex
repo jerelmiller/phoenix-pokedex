@@ -4,7 +4,7 @@ defmodule Pokedex.Schema do
 
   query do
     field :pokemons, list_of(:pokemon) do
-      resolve &Pokedex.PokemonResolver.all/2
+      resolve &Pokedex.Resolvers.Pokemon.all/2
     end
   end
 end

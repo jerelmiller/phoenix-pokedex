@@ -1,4 +1,4 @@
-defmodule Pokedex.PokemonResolver do
+defmodule Pokedex.Resolvers.Pokemon do
   use Pokedex.Resolver
   use Absinthe.Ecto, repo: Pokedex.Repo
 
