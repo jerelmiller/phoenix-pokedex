@@ -6,7 +6,12 @@ defmodule Pokedex.Resolvers.Pokemon do
   alias Pokedex.Pokemon.Query
 
   def all(_, _) do
-    {:ok, Repo.all(Pokemon)}
+    pokemon =
+      Pokemon
+      |> order_by(asc: :id)
+      |> Repo.all()
+
+    {:ok, pokemon}
   end
 
   def find(%{id: id}, _) do
