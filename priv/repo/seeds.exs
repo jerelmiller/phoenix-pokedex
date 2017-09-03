@@ -46,6 +46,7 @@ defmodule DataHelper do
     associate_types(pokemon, data.types, Pokemon.PokemonType)
     associate_types(pokemon, data.weaknesses, Pokemon.PokemonWeakness)
     associate_types(pokemon, data.strengths, Pokemon.PokemonStrength)
+    associate_moves(pokemon, data.moves)
   end
 
   defp associate_types(pokemon, types, schema) do
@@ -63,6 +64,50 @@ defmodule DataHelper do
         })
       )
     end)
+  end
+
+  def associate_moves(pokemon, moves) do
+    moves
+    |> Enum.map(&find_or_create_move/1)
+  end
+
+  def find_or_create_move(move) do
+    find_or_create(
+      (from m in Pokemon.Move, where: m.name == ^move.name),
+      fn ->
+        effect = find_or_create_effect(move.effect)
+        type = find_or_create_type(move.type)
+
+        Pokemon.Move.changeset(%Pokemon.Move{}, %{
+          accuracy: move.accuracy,
+          effect_change: move.effect_chance,
+          effect_id: effect.id,
+          name: move.name,
+          power: move.power,
+          pp: move.pp,
+          type_id: type.id
+        })
+      end
+    )
+  end
+
+  defp find_or_create_effect(effect) do
+    find_or_create(
+      (from e in Pokemon.Effect, where: e.description == ^effect.description),
+      Pokemon.Effect.changeset(%Pokemon.Effect{}, %{
+        description: effect.description
+      })
+    )
+  end
+
+  defp find_or_create_move_method(%{name: name} = move_method) do
+    find_or_create(
+      (from mm in Pokemon.MoveMethod, where: mm.name == ^name),
+      Pokemon.MoveMethod.changeset(%Pokemon.MoveMethod{}, %{
+        name: name,
+        description: move_method.description
+      })
+    )
   end
 
   defp find_or_create_type(name) do
@@ -89,6 +134,10 @@ defmodule DataHelper do
         weight: pokemon.weight
       })
     )
+  end
+
+  def find_or_create(query, func) when is_function(func) do
+    Repo.one(query) || Repo.insert!(func.())
   end
 
   def find_or_create(query, changeset) do
