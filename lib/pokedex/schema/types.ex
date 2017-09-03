@@ -6,26 +6,34 @@ defmodule Pokedex.Schema.Types do
 
   @desc "Represents a possible move a pokemon can acquire"
   object :move do
+    @desc "The level the pokemon must reach to acquire the move"
     field :level, :integer
 
+    @desc "Accuracy of the move"
     field :accuracy, :integer,
       resolve: Lookup.path([:move, :accuracy])
 
+    @desc "Percent chance the move will achieve the effect"
     field :effect_chance, :integer,
       resolve: Lookup.path([:move, :effect_chance])
 
+    @desc "Name of the move"
     field :name, non_null(:string),
       resolve: Lookup.path([:move, :name])
 
+    @desc "Power of the move"
     field :power, :integer,
       resolve: Lookup.path([:move, :power])
 
+    @desc "PP of the move"
     field :pp, non_null(:integer),
       resolve: Lookup.path([:move, :pp])
 
+    @desc "Effect of the move"
     field :effect, non_null(:string),
       resolve: &Move.effect(&1.move, &2, &3)
 
+    @desc "How the move can be acquired by the pokemon"
     field :move_method, :move_method, resolve: assoc(:move_method)
   end
 
@@ -38,28 +46,53 @@ defmodule Pokedex.Schema.Types do
   @desc "Represents a pokemon"
   object :pokemon do
     field :id, :id
+
+    @desc "Attack power of the pokemon"
     field :attack, :integer
+
+    @desc "Short description about the pokemon"
     field :description, :string
+
+    @desc "The height of the pokemon. Default unit is meters."
     field :height, :float
+
+    @desc "The HP of the pokemon"
     field :hp, :integer
+
+    @desc "The pokemon's name"
     field :name, :string
+
+    @desc "The pokedex number of the pokemon"
     field :number, :string
+
+    @desc "Special attack of the pokemon"
     field :special_attack, :integer
+
+    @desc "Special defense of the pokemon"
     field :special_defense, :integer
+
+    @desc "Speed of the pokemon"
     field :speed, :integer
+
+    @desc "Weight of the pokemon. Default unit is kilograms."
     field :weight, :float
 
+    @desc "A list of the pokemon types"
     field :types, list_of(:string),
       resolve: Lookup.assoc_lookup(:types, :name)
 
+    @desc "A list of types the pokemon is weak against"
     field :weaknesses, list_of(:string),
       resolve: Lookup.assoc_lookup(:weaknesses, :name)
 
+    @desc "A list of types the pokemon is strong against"
     field :strengths, list_of(:string),
       resolve: Lookup.assoc_lookup(:strengths, :name)
 
+    @desc "A list of moves the pokemon can acquire"
     field :moves, list_of(:move), resolve: Pokemon.moves
 
+    @desc "The evolution chain for the pokemon"
     field :evolutions, list_of(:pokemon),
       resolve: &Pokemon.evolutions/3
   end
