@@ -13,5 +13,9 @@ defmodule Pokedex.Schema.Types do
     field :special_defense, :integer
     field :speed, :integer
     field :weight, :float
+
+    field :types, list_of(:string) do
+      resolve &Pokedex.PokemonResolver.types/3
+    end
   end
 end
