@@ -89,7 +89,7 @@ defmodule DataHelper do
     )
   end
 
-  def find_or_create_move(move) do
+  defp find_or_create_move(move) do
     find_or_create(
       (from m in Pokemon.Move, where: m.name == ^move.name),
       fn ->
@@ -114,16 +114,6 @@ defmodule DataHelper do
       (from e in Pokemon.Effect, where: e.description == ^effect.description),
       Pokemon.Effect.changeset(%Pokemon.Effect{}, %{
         description: effect.description
-      })
-    )
-  end
-
-  defp find_or_create_move_method(%{name: name} = move_method) do
-    find_or_create(
-      (from mm in Pokemon.MoveMethod, where: mm.name == ^name),
-      Pokemon.MoveMethod.changeset(%Pokemon.MoveMethod{}, %{
-        name: name,
-        description: move_method.description
       })
     )
   end
