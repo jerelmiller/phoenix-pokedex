@@ -1,4 +1,4 @@
-defmodule Pokedex.Lookup do
+defmodule Pokedex.Resolvers.Lookup do
   use Absinthe.Ecto, repo: Pokedex.Repo
 
   alias Pokedex.Repo
