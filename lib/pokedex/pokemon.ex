@@ -36,8 +36,8 @@ defmodule Pokedex.Pokemon do
   def changeset(%Pokemon{} = pokemon, attrs) do
     pokemon
     |> cast(attrs, [
-      :attack, :defense, :description, :height, :hp, :name, :number, :special_attack,
-      :special_defense, :speed, :weight
+      :attack, :defense, :description, :height, :hp, :involution_id, :name,
+      :number, :special_attack, :special_defense, :speed, :weight
     ])
     |> validate_required([
       :attack, :defense, :hp, :height, :name, :number, :special_attack,
