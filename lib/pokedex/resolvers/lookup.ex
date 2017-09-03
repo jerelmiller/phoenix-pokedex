@@ -13,4 +13,10 @@ defmodule Pokedex.Lookup do
       end)
     end
   end
+
+  def path(path) when is_list(path) do
+    fn (parent, _, _) ->
+      {:ok, Enum.reduce(path, parent, &Map.fetch!(&2, &1))}
+    end
+  end
 end
