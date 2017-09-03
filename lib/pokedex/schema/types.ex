@@ -14,8 +14,7 @@ defmodule Pokedex.Schema.Types do
     field :speed, :integer
     field :weight, :float
 
-    field :types, list_of(:string) do
-      resolve &Pokedex.PokemonResolver.types/3
-    end
+    field :types, list_of(:string),
+      resolve: Pokedex.Lookup.assoc_lookup(:types, :name)
   end
 end
