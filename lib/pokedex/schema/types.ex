@@ -2,7 +2,7 @@ defmodule Pokedex.Schema.Types do
   use Absinthe.Schema.Notation
   use Absinthe.Ecto, repo: Pokedex.Repo
 
-  alias Pokedex.Resolvers.{Lookup, Pokemon}
+  alias Pokedex.Resolvers.{Lookup, Pokemon, Move}
 
   object :move do
     field :level, :integer
@@ -23,7 +23,7 @@ defmodule Pokedex.Schema.Types do
       resolve: Lookup.path([:move, :pp])
 
     field :effect, non_null(:string),
-      resolve: Lookup.path([:move, :effect, :description])
+      resolve: &Move.effect(&1.move, &2, &3)
 
     field :move_method, :move_method, resolve: assoc(:move_method)
   end
