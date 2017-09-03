@@ -32,6 +32,7 @@ defmodule Pokedex.Schema.Types do
     field :level, non_null(:integer)
 
     field :move, :move, resolve: assoc(:move)
+    field :move_method, :move_method, resolve: assoc(:move_method)
   end
 
   object :move do
@@ -40,5 +41,10 @@ defmodule Pokedex.Schema.Types do
     field :name, non_null(:string)
     field :power, :integer
     field :pp, non_null(:integer)
+  end
+
+  object :move_method do
+    field :name, non_null(:string)
+    field :description, non_null(:string)
   end
 end
