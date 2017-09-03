@@ -9,4 +9,25 @@ defmodule Pokedex.Pokemon.Query do
       join: mm in assoc(pm, :move_method),
       preload: [move: {m, type: t, effect: e}, move_method: mm]
   end
+
+  def evolutions_for(query, id) do
+    from p in query,
+      join: e in fragment("""
+        WITH RECURSIVE involutions AS (
+          SELECT * FROM pokemons WHERE id = ?
+          UNION ALL
+          SELECT p.* FROM pokemons p JOIN involutions i ON i.involution_id = p.id
+        ),
+        evolutions AS (
+          SELECT * from pokemons WHERE id = ?
+          UNION ALL
+          SELECT p.* from pokemons p JOIN evolutions e on p.involution_id = e.id
+        )
+        SELECT DISTINCT * FROM involutions
+        UNION
+        SELECT DISTINCT * FROM evolutions
+        """, ^id, ^id),
+      on: e.id == p.id,
+      order_by: p.id
+  end
 end
