@@ -18,5 +18,14 @@ defmodule Pokedex.Resolvers.Pokemon do
 
   def moves, do: assoc(:pokemon_moves, &preload_moves/3)
 
+  def evolutions(pokemon, _, _) do
+    evolutions =
+      Pokemon
+      |> Query.evolutions_for(pokemon.id)
+      |> Repo.all()
+
+    {:ok, evolutions}
+  end
+
   defp preload_moves(query, _, _), do: Query.preload_moves(query)
 end

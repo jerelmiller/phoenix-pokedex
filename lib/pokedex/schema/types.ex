@@ -56,5 +56,8 @@ defmodule Pokedex.Schema.Types do
       resolve: Lookup.assoc_lookup(:strengths, :name)
 
     field :moves, list_of(:move), resolve: Pokemon.moves
+
+    field :evolutions, list_of(:pokemon),
+      resolve: &Pokemon.evolutions/3
   end
 end
