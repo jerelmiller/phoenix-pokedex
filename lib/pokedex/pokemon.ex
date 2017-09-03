@@ -23,6 +23,8 @@ defmodule Pokedex.Pokemon do
     field :speed, :integer
     field :weight, :decimal
 
+    belongs_to :involution, Pokemon
+
     has_many :pokemon_moves, PokemonMove
 
     many_to_many :types, Type, join_through: PokemonType
