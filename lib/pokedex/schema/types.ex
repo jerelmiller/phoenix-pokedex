@@ -16,5 +16,11 @@ defmodule Pokedex.Schema.Types do
 
     field :types, list_of(:string),
       resolve: Pokedex.Lookup.assoc_lookup(:types, :name)
+
+    field :weaknesses, list_of(:string),
+      resolve: Pokedex.Lookup.assoc_lookup(:weaknesses, :name)
+
+    field :strengths, list_of(:string),
+      resolve: Pokedex.Lookup.assoc_lookup(:strengths, :name)
   end
 end
