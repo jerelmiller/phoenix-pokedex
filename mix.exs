@@ -40,7 +40,8 @@ defmodule Pokedex.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:absinthe, "~> 1.3.2"},
-      {:absinthe_plug, "~> 1.3.1"}
+      {:absinthe_plug, "~> 1.3.1"},
+      {:absinthe_ecto, "~> 0.1.2"}
     ]
   end
 
