@@ -22,8 +22,6 @@ defmodule Pokedex.Pokemon.Move do
     |> cast(attrs, [
       :name, :power, :pp, :accuracy, :effect_chance, :type_id, :effect_id
     ])
-    |> validate_required([
-      :name, :power, :pp, :accuracy, :type_id, :effect_id
-    ])
+    |> validate_required([:name, :pp, :type_id, :effect_id])
   end
 end
