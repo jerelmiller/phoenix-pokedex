@@ -2,6 +2,22 @@ defmodule Pokedex.Schema.Types do
   use Absinthe.Schema.Notation
   use Absinthe.Ecto, repo: Pokedex.Repo
 
+  object :move do
+    field :accuracy, :integer
+    field :effect_chance, :integer
+    field :name, non_null(:string)
+    field :power, :integer
+    field :pp, non_null(:integer)
+
+    field :effect, non_null(:string),
+      resolve: Pokedex.Lookup.assoc_lookup(:effect, :description)
+  end
+
+  object :move_method do
+    field :name, non_null(:string)
+    field :description, non_null(:string)
+  end
+
   object :pokemon do
     field :id, :id
     field :attack, :integer
@@ -33,21 +49,5 @@ defmodule Pokedex.Schema.Types do
 
     field :move, :move, resolve: assoc(:move)
     field :move_method, :move_method, resolve: assoc(:move_method)
-  end
-
-  object :move do
-    field :accuracy, :integer
-    field :effect_chance, :integer
-    field :name, non_null(:string)
-    field :power, :integer
-    field :pp, non_null(:integer)
-
-    field :effect, non_null(:string),
-      resolve: Pokedex.Lookup.assoc_lookup(:effect, :description)
-  end
-
-  object :move_method do
-    field :name, non_null(:string)
-    field :description, non_null(:string)
   end
 end
