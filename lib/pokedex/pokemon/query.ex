@@ -23,9 +23,9 @@ defmodule Pokedex.Pokemon.Query do
           UNION ALL
           SELECT p.* from pokemons p JOIN evolutions e on p.involution_id = e.id
         )
-        SELECT DISTINCT * FROM involutions
+        SELECT * FROM involutions
         UNION
-        SELECT DISTINCT * FROM evolutions
+        SELECT * FROM evolutions
         """, ^id, ^id),
       on: e.id == p.id,
       order_by: p.id
