@@ -3,6 +3,7 @@ defmodule Pokedex.Resolvers.Move do
     description =
       move.effect.description
       |> sub_chance(move.effect_chance)
+      |> replace_mechanic()
 
     {:ok, description}
   end
@@ -16,5 +17,10 @@ defmodule Pokedex.Resolvers.Move do
   defp sub_chance(description, chance) do
     description
     |> String.replace("$effect_chance", chance, global: true)
+  end
+
+  defp replace_mechanic(description) do
+    description
+    |> String.replace(~r/\[([a-zA-Z]*?)\]\{.*?\}/, "\\1", global: true)
   end
 end
