@@ -23,7 +23,7 @@ defmodule Pokedex.Pokemon.Move do
       :name, :power, :pp, :accuracy, :effect_chance, :type_id, :effect_id
     ])
     |> validate_required([
-      :name, :power, :pp, :accuracy, :effect_chance, :type_id, :effect_id
+      :name, :power, :pp, :accuracy, :type_id, :effect_id
     ])
   end
 end
