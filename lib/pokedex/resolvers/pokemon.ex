@@ -33,9 +33,10 @@ defmodule Pokedex.Resolvers.Pokemon do
   end
 
   def image(%{number: number, name: name}, _, _) do
-    {:ok, "#{base_url()}/images/#{number}#{name}.png"}
+    {:ok, "#{base_url()}/images/#{number}#{clean_name(name)}.png"}
   end
 
   defp preload_moves(query, _, _), do: Query.preload_moves(query)
   defp base_url, do: PokedexWeb.Endpoint.url()
+  defp clean_name(name), do: String.replace(name, ~r/[^a-zA-Z\-]/, "")
 end
