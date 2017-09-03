@@ -66,9 +66,39 @@ defmodule DataHelper do
     end)
   end
 
-  def associate_moves(pokemon, moves) do
+  defp associate_moves(pokemon, moves) do
     moves
-    |> Enum.map(&find_or_create_move/1)
+    |> Enum.map(fn move -> {move, find_or_create_move(move)} end)
+    |> Enum.map(fn {data, move} ->
+      find_or_create_pokemon_move(pokemon, move, data)
+    end)
+  end
+
+  defp find_or_create_pokemon_move(pokemon, move, data) do
+    find_or_create(
+      (from pm in Pokemon.PokemonMove,
+       where: pm.pokemon_id == ^pokemon.id and pm.move_id == ^move.id),
+      fn ->
+        move_method = find_or_create_move_method(data.move_method)
+
+        Pokemon.PokemonMove.changeset(%Pokemon.PokemonMove{}, %{
+          level: data.level,
+          move_id: move.id,
+          pokemon_id: pokemon.id,
+          move_method_id: move_method.id
+        })
+      end
+    )
+  end
+
+  defp find_or_create_move_method(move_method) do
+    find_or_create(
+      (from mm in Pokemon.MoveMethod, where: mm.name == ^move_method.name),
+      Pokemon.MoveMethod.changeset(%Pokemon.MoveMethod{}, %{
+        name: move_method.name,
+        description: move_method.description
+      })
+    )
   end
 
   def find_or_create_move(move) do
