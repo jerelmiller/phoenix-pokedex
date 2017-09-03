@@ -3,6 +3,7 @@ defmodule Pokedex.Pokemon do
   import Ecto.Changeset
   alias Pokedex.Pokemon
   alias Pokedex.Pokemon.{
+    PokemonMove,
     PokemonType,
     PokemonWeakness,
     PokemonStrength,
@@ -21,6 +22,8 @@ defmodule Pokedex.Pokemon do
     field :special_defense, :integer
     field :speed, :integer
     field :weight, :decimal
+
+    has_many :pokemon_moves, PokemonMove
 
     many_to_many :types, Type, join_through: PokemonType
     many_to_many :weaknesses, Type, join_through: PokemonWeakness
