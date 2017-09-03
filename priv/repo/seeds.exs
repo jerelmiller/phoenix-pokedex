@@ -35,7 +35,9 @@ defmodule DataHelper do
     %Data.Created{}
     |> create_types(data)
     |> create_pokemon(data)
-    |> create_pokemon_types(data)
+    |> associate_types(data, :types, Pokemon.PokemonType)
+    |> associate_types(data, :weaknesses, Pokemon.PokemonWeakness)
+    |> associate_types(data, :strengths, Pokemon.PokemonStrength)
   end
 
   defp parse_pokemon(file) do
@@ -49,19 +51,19 @@ defmodule DataHelper do
     |> put_pokemon(created)
   end
 
-  defp create_pokemon_types(created, data) do
+  defp associate_types(created, data, association, schema) do
     data
     |> Enum.with_index
     |> Enum.each(fn ({pokemon, index}) ->
       pokemon_id = Map.fetch!(created.pokemon, pokemon.number)
 
-      Enum.each(pokemon.types, fn type ->
+      Enum.each(Map.get(pokemon, association), fn type ->
         type_id = Map.fetch!(created.types, type)
 
         find_or_create(
-          (from pt in Pokemon.PokemonType,
+          (from pt in schema,
             where: pt.pokemon_id == ^pokemon_id and pt.type_id == ^type_id),
-          Pokemon.PokemonType.changeset(%Pokemon.PokemonType{}, %{
+          schema.changeset(struct(schema), %{
             order: index,
             pokemon_id: pokemon_id,
             type_id: type_id
