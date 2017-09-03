@@ -35,9 +35,7 @@ defmodule DataHelper do
     %Data.Created{}
     |> create_types(data)
     |> create_pokemon(data)
-    |> associate_types(data, :types, Pokemon.PokemonType)
-    |> associate_types(data, :weaknesses, Pokemon.PokemonWeakness)
-    |> associate_types(data, :strengths, Pokemon.PokemonStrength)
+    |> associate_relationships(data)
   end
 
   defp parse_pokemon(file) do
@@ -46,30 +44,38 @@ defmodule DataHelper do
     |> Poison.decode!(as: [%Data.Pokemon{}], keys: :atoms)
   end
 
+  defp associate_relationships(created, data) do
+    data
+    |> Enum.with_index
+    |> Enum.each(fn ({pokemon, order}) ->
+      created
+      |> associate_types(pokemon, order, :types, Pokemon.PokemonType)
+      |> associate_types(pokemon, order, :weaknesses, Pokemon.PokemonWeakness)
+      |> associate_types(pokemon, order, :strengths, Pokemon.PokemonStrength)
+    end)
+  end
+
   defp create_pokemon(created, data) do
     Enum.map(data, &find_or_create_pokemon/1)
     |> put_pokemon(created)
   end
 
-  defp associate_types(created, data, association, schema) do
-    data
-    |> Enum.with_index
-    |> Enum.each(fn ({pokemon, index}) ->
-      pokemon_id = Map.fetch!(created.pokemon, pokemon.number)
+  defp associate_types(created, pokemon, order, association, schema) do
+    pokemon_id = Map.fetch!(created.pokemon, pokemon.number)
 
-      Enum.each(Map.get(pokemon, association), fn type ->
-        type_id = Map.fetch!(created.types, type)
+    Map.fetch!(pokemon, association)
+    |> Enum.each(fn type ->
+      type_id = Map.fetch!(created.types, type)
 
-        find_or_create(
-          (from pt in schema,
-            where: pt.pokemon_id == ^pokemon_id and pt.type_id == ^type_id),
-          schema.changeset(struct(schema), %{
-            order: index,
-            pokemon_id: pokemon_id,
-            type_id: type_id
-          })
-        )
-      end)
+      find_or_create(
+        (from pt in schema,
+          where: pt.pokemon_id == ^pokemon_id and pt.type_id == ^type_id),
+        schema.changeset(struct(schema), %{
+          order: order,
+          pokemon_id: pokemon_id,
+          type_id: type_id
+        })
+      )
     end)
 
     created
