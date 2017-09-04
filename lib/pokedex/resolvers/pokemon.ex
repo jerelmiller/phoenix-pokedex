@@ -24,17 +24,6 @@ defmodule Pokedex.Resolvers.Pokemon do
     end
   end
 
-  def types do
-    fn (pokemon, _, _) ->
-      ecto_batch(
-        Repo,
-        pokemon,
-        {:pokemon_types, &Query.ordered_types/1},
-        &resolve_types/1
-      )
-    end
-  end
-
   def moves, do: assoc(:pokemon_moves, &preload_moves/3)
 
   def evolutions(pokemon, _, _) do
