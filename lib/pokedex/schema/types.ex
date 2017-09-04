@@ -65,6 +65,9 @@ defmodule Pokedex.Schema.Types do
     @desc "Short description about the pokemon"
     field :description, :string
 
+    @desc "Defense of the pokemon"
+    field :defense, :integer
+
     @desc "The height of the pokemon. Default unit is meters."
     field :height, :float do
       arg :unit, :length_unit
