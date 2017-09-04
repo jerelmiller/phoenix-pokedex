@@ -80,8 +80,13 @@ defmodule Pokedex.Resolvers.Pokemon do
 
   defp preload_moves(query, _, _), do: Query.preload_moves(query)
   defp base_url, do: PokedexWeb.Endpoint.url()
-  defp clean_name(name), do: String.replace(name, ~r/[^a-zA-Z\-]/, "")
   defp resolve_types(pokemon_types) do
     {:ok, Enum.map(pokemon_types, &Map.get(&1.type, :name))}
+  end
+
+  defp clean_name(name) do
+    name
+    |> String.replace(~r/\s/, "-")
+    |> String.replace(~r/[^a-zA-Z\-]/, "")
   end
 end
