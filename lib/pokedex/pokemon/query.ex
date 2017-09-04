@@ -10,6 +10,13 @@ defmodule Pokedex.Pokemon.Query do
       preload: [move: {m, type: t, effect: e}, move_method: mm]
   end
 
+  def ordered_types(query) do
+    from pt in query,
+      join: t in assoc(pt, :type),
+      order_by: [pt.order],
+      preload: [type: t]
+  end
+
   def evolutions_for(query, id) do
     from p in query,
       join: e in fragment("""
