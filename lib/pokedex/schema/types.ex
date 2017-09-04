@@ -4,6 +4,11 @@ defmodule Pokedex.Schema.Types do
 
   alias Pokedex.Resolvers.{Lookup, Pokemon, Move}
 
+  enum :length_unit do
+    value :foot
+    value :meter
+  end
+
   enum :weight_unit do
     value :kilogram
     value :pound
@@ -59,7 +64,11 @@ defmodule Pokedex.Schema.Types do
     field :description, :string
 
     @desc "The height of the pokemon. Default unit is meters."
-    field :height, :float
+    field :height, :float do
+      arg :unit, :length_unit
+
+      resolve &Pokemon.height/3
+    end
 
     @desc "The HP of the pokemon"
     field :hp, :integer

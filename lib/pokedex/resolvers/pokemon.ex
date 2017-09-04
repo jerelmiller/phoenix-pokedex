@@ -6,6 +6,7 @@ defmodule Pokedex.Resolvers.Pokemon do
   alias Pokedex.Pokemon.Query
 
   @pounds_per_kilogram Decimal.new(2.20462)
+  @feet_per_meter Decimal.new(3.28084)
 
   def all(_, _) do
     pokemon =
@@ -56,6 +57,26 @@ defmodule Pokedex.Resolvers.Pokemon do
   end
 
   def weight(pokemon, _, _), do: weight(pokemon, %{unit: :kilogram}, nil)
+
+  def height(pokemon, %{unit: :meter}, _) do
+    height =
+      pokemon.height
+      |> Decimal.round(2)
+
+    {:ok, height}
+
+  end
+
+  def height(pokemon, %{unit: :foot}, _) do
+    height =
+      pokemon.height
+      |> Decimal.mult(@feet_per_meter)
+      |> Decimal.round(2)
+
+    {:ok, height}
+  end
+
+  def height(pokemon, _, _), do: height(pokemon, %{unit: :meter}, nil)
 
   defp preload_moves(query, _, _), do: Query.preload_moves(query)
   defp base_url, do: PokedexWeb.Endpoint.url()
