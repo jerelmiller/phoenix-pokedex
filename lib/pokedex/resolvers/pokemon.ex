@@ -24,6 +24,23 @@ defmodule Pokedex.Resolvers.Pokemon do
     end
   end
 
+  def types do
+    fn (pokemon, _, _) ->
+      ecto_batch(Repo, pokemon,
+        {:pokemon_types, fn query ->
+          from pt in query,
+            join: t in assoc(pt, :type),
+            order_by: [pt.order],
+            preload: [type: t]
+        end},
+
+        fn pokemon_types ->
+          {:ok, Enum.map(pokemon_types, &Map.get(&1.type, :name))}
+        end
+      )
+    end
+  end
+
   def moves, do: assoc(:pokemon_moves, &preload_moves/3)
 
   def evolutions(pokemon, _, _) do

@@ -102,7 +102,7 @@ defmodule Pokedex.Schema.Types do
 
     @desc "A list of the pokemon types"
     field :types, list_of(:string),
-      resolve: Lookup.assoc_lookup(:types, :name)
+      resolve: Pokemon.types
 
     @desc "A list of types the pokemon is weak against"
     field :weaknesses, list_of(:string),

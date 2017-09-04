@@ -26,6 +26,7 @@ defmodule Pokedex.Pokemon do
     belongs_to :involution, Pokemon
 
     has_many :pokemon_moves, PokemonMove
+    has_many :pokemon_types, PokemonType
 
     many_to_many :types, Type, join_through: PokemonType
     many_to_many :weaknesses, Type, join_through: PokemonWeakness
