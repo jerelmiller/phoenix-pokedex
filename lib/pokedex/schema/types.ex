@@ -4,11 +4,13 @@ defmodule Pokedex.Schema.Types do
 
   alias Pokedex.Resolvers.{Lookup, Pokemon, Move}
 
+  @desc "Units of length"
   enum :length_unit do
     value :foot
     value :meter
   end
 
+  @desc "Units of weight"
   enum :weight_unit do
     value :kilogram
     value :pound
