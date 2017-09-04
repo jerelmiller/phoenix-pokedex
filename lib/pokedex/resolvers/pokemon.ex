@@ -26,11 +26,11 @@ defmodule Pokedex.Resolvers.Pokemon do
 
   def types do
     fn (pokemon, _, _) ->
-      ecto_batch(Repo, pokemon,
+      ecto_batch(
+        Repo,
+        pokemon,
         {:pokemon_types, &Query.ordered_types/1},
-        fn pokemon_types ->
-          {:ok, Enum.map(pokemon_types, &Map.get(&1.type, :name))}
-        end
+        &resolve_types/1
       )
     end
   end
@@ -92,4 +92,7 @@ defmodule Pokedex.Resolvers.Pokemon do
   defp preload_moves(query, _, _), do: Query.preload_moves(query)
   defp base_url, do: PokedexWeb.Endpoint.url()
   defp clean_name(name), do: String.replace(name, ~r/[^a-zA-Z\-]/, "")
+  defp resolve_types(pokemon_types) do
+    {:ok, Enum.map(pokemon_types, &Map.get(&1.type, :name))}
+  end
 end
