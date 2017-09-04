@@ -28,7 +28,7 @@ defmodule PokedexWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
 
-  plug Absinthe.Plug, schema: Pokedex.Schema
+  plug Absinthe.Plug.GraphiQL, schema: Pokedex.Schema
 
   @doc """
   Callback invoked for dynamically configuring the endpoint.
