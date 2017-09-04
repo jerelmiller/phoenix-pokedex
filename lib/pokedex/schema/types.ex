@@ -4,6 +4,11 @@ defmodule Pokedex.Schema.Types do
 
   alias Pokedex.Resolvers.{Lookup, Pokemon, Move}
 
+  enum :weight_unit do
+    value :kilogram
+    value :pound
+  end
+
   @desc "Represents a possible move a pokemon can acquire"
   object :move do
     @desc "The level the pokemon must reach to acquire the move"
@@ -75,7 +80,11 @@ defmodule Pokedex.Schema.Types do
     field :speed, :integer
 
     @desc "Weight of the pokemon. Default unit is kilograms."
-    field :weight, :float
+    field :weight, :float do
+      arg :unit, :weight_unit
+
+      resolve &Pokemon.weight/3
+    end
 
     @desc "A list of the pokemon types"
     field :types, list_of(:string),

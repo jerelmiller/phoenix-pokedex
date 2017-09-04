@@ -5,6 +5,8 @@ defmodule Pokedex.Resolvers.Pokemon do
   alias Pokedex.Pokemon
   alias Pokedex.Pokemon.Query
 
+  @pounds_per_kilogram Decimal.new(2.20462)
+
   def all(_, _) do
     pokemon =
       Pokemon
@@ -35,6 +37,25 @@ defmodule Pokedex.Resolvers.Pokemon do
   def image(%{number: number, name: name}, _, _) do
     {:ok, "#{base_url()}/images/#{number}#{clean_name(name)}.png"}
   end
+
+  def weight(pokemon, %{unit: :kilogram}, _) do
+    weight =
+      pokemon.weight
+      |> Decimal.round(2)
+
+    {:ok, weight}
+  end
+
+  def weight(pokemon, %{unit: :pound}, _) do
+    weight =
+      pokemon.weight
+      |> Decimal.mult(@pounds_per_kilogram)
+      |> Decimal.round(2)
+
+    {:ok, weight}
+  end
+
+  def weight(pokemon, _, _), do: weight(pokemon, %{unit: :kilogram}, nil)
 
   defp preload_moves(query, _, _), do: Query.preload_moves(query)
   defp base_url, do: PokedexWeb.Endpoint.url()
