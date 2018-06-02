@@ -1,6 +1,7 @@
 defmodule Pokedex.Schema.Types do
   use Absinthe.Schema.Notation
 
+  alias Pokedex.Resolvers
   alias Pokedex.Resolvers.{Lookup, Pokemon, Move}
   import Absinthe.Resolution.Helpers
   import PokedexWeb.Schema.ResolutionHelpers
@@ -116,7 +117,8 @@ defmodule Pokedex.Schema.Types do
     field :moves, list_of(:move), resolve: Pokemon.moves()
 
     @desc "The evolution chain for the pokemon"
-    field :evolutions, list_of(:pokemon), resolve: &Pokemon.evolutions/3
+    field :evolutions, list_of(:pokemon),
+      resolve: &Resolvers.Pokemon.evolutions/3
 
     @desc "URL location of the image for the pokemon"
     field :image, non_null(:string), resolve: &Pokemon.image/3
