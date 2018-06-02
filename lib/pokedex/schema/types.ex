@@ -2,6 +2,7 @@ defmodule Pokedex.Schema.Types do
   use Absinthe.Schema.Notation
 
   alias Pokedex.Resolvers.{Lookup, Pokemon, Move}
+  import Absinthe.Resolution.Helpers, only: [dataloader: 1]
 
   @desc "Units of length"
   enum :length_unit do
@@ -40,7 +41,7 @@ defmodule Pokedex.Schema.Types do
     field :effect, non_null(:string), resolve: &Move.effect(&1.move, &2, &3)
 
     @desc "How the move can be acquired by the pokemon"
-    field :move_method, :move_method, resolve: assoc(:move_method)
+    field :move_method, :move_method, resolve: dataloader(:move_method)
   end
 
   @desc "Represents how a move is acquired by a pokemon"
