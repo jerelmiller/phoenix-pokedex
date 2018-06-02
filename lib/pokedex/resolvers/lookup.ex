@@ -1,17 +1,16 @@
 defmodule Pokedex.Resolvers.Lookup do
-  use Absinthe.Ecto, repo: Pokedex.Repo
-
   alias Pokedex.Repo
 
   def assoc_lookup(association, field) do
     fn parent, _, _ ->
-      ecto_batch(Repo, parent, association, fn
-        records when is_list(records) ->
-          {:ok, Enum.map(records, &extract_nested_value(&1, field))}
+      nil
+      # ecto_batch(Repo, parent, association, fn
+      #   records when is_list(records) ->
+      #     {:ok, Enum.map(records, &extract_nested_value(&1, field))}
 
-        record ->
-          {:ok, extract_nested_value(record, field)}
-      end)
+      #   record ->
+      #     {:ok, extract_nested_value(record, field)}
+      # end)
     end
   end
 
