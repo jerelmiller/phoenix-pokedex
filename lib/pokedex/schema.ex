@@ -16,4 +16,13 @@ defmodule Pokedex.Schema do
       resolve &Resolvers.Pokemon.find/2
     end
   end
+
+  def context(context) do
+    context
+    |> Map.put(:loader, PokedexWeb.Loader.define(context))
+  end
+
+  def plugins do
+    [Absinthe.Middleware.Dataloader] ++ Absinthe.Plugin.defaults()
+  end
 end
