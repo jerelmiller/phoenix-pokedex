@@ -1,6 +1,5 @@
 defmodule Pokedex.Resolvers.Pokemon do
   use Pokedex.Resolver
-  use Absinthe.Ecto, repo: Pokedex.Repo
 
   alias Pokedex.Pokemon
   alias Pokedex.Pokemon.Query
@@ -24,7 +23,8 @@ defmodule Pokedex.Resolvers.Pokemon do
     end
   end
 
-  def moves, do: assoc(:pokemon_moves, &preload_moves/3)
+  # assoc(:pokemon_moves, &preload_moves/3)
+  def moves, do: nil
 
   def evolutions(pokemon, _, _) do
     evolutions =
