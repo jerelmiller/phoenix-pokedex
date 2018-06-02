@@ -20,7 +20,13 @@ defmodule Pokedex.Pokemon.Move do
   def changeset(%Move{} = move, attrs) do
     move
     |> cast(attrs, [
-      :name, :power, :pp, :accuracy, :effect_chance, :type_id, :effect_id
+      :name,
+      :power,
+      :pp,
+      :accuracy,
+      :effect_chance,
+      :type_id,
+      :effect_id
     ])
     |> validate_required([:name, :pp, :type_id, :effect_id])
   end

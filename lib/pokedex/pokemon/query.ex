@@ -19,21 +19,26 @@ defmodule Pokedex.Pokemon.Query do
 
   def evolutions_for(query, id) do
     from p in query,
-      join: e in fragment("""
-        WITH RECURSIVE involutions AS (
-          SELECT * FROM pokemons WHERE id = ?
-          UNION ALL
-          SELECT p.* FROM pokemons p JOIN involutions i ON i.involution_id = p.id
+      join:
+        e in fragment(
+          """
+          WITH RECURSIVE involutions AS (
+            SELECT * FROM pokemons WHERE id = ?
+            UNION ALL
+            SELECT p.* FROM pokemons p JOIN involutions i ON i.involution_id = p.id
+          ),
+          evolutions AS (
+            SELECT * from pokemons WHERE id = ?
+            UNION ALL
+            SELECT p.* from pokemons p JOIN evolutions e on p.involution_id = e.id
+          )
+          SELECT * FROM involutions
+          UNION
+          SELECT * FROM evolutions
+          """,
+          ^id,
+          ^id
         ),
-        evolutions AS (
-          SELECT * from pokemons WHERE id = ?
-          UNION ALL
-          SELECT p.* from pokemons p JOIN evolutions e on p.involution_id = e.id
-        )
-        SELECT * FROM involutions
-        UNION
-        SELECT * FROM evolutions
-        """, ^id, ^id),
       on: e.id == p.id,
       order_by: p.id
   end

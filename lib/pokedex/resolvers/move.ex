@@ -9,6 +9,7 @@ defmodule Pokedex.Resolvers.Move do
   end
 
   defp sub_chance(description, chance) when is_nil(chance), do: description
+
   defp sub_chance(description, chance) when is_integer(chance) do
     description
     |> sub_chance(Integer.to_string(chance))

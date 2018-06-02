@@ -64,7 +64,6 @@ defmodule Pokedex.Resolvers.Pokemon do
       |> Decimal.round(2)
 
     {:ok, height}
-
   end
 
   def height(pokemon, %{unit: :foot}, _) do
@@ -80,6 +79,7 @@ defmodule Pokedex.Resolvers.Pokemon do
 
   defp preload_moves(query, _, _), do: Query.preload_moves(query)
   defp base_url, do: PokedexWeb.Endpoint.url()
+
   defp resolve_types(pokemon_types) do
     {:ok, Enum.map(pokemon_types, &Map.get(&1.type, :name))}
   end

@@ -4,10 +4,11 @@ defmodule Pokedex.Resolvers.Lookup do
   alias Pokedex.Repo
 
   def assoc_lookup(association, field) do
-    fn (parent, _, _) ->
+    fn parent, _, _ ->
       ecto_batch(Repo, parent, association, fn
         records when is_list(records) ->
           {:ok, Enum.map(records, &extract_nested_value(&1, field))}
+
         record ->
           {:ok, extract_nested_value(record, field)}
       end)
@@ -15,7 +16,7 @@ defmodule Pokedex.Resolvers.Lookup do
   end
 
   def path(path) when is_list(path) do
-    fn (parent, _, _) ->
+    fn parent, _, _ ->
       {:ok, extract_nested_value(parent, path)}
     end
   end

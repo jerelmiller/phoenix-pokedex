@@ -22,28 +22,23 @@ defmodule Pokedex.Schema.Types do
     field :level, :integer
 
     @desc "Accuracy of the move"
-    field :accuracy, :integer,
-      resolve: Lookup.path([:move, :accuracy])
+    field :accuracy, :integer, resolve: Lookup.path([:move, :accuracy])
 
     @desc "Percent chance the move will achieve the effect"
     field :effect_chance, :integer,
       resolve: Lookup.path([:move, :effect_chance])
 
     @desc "Name of the move"
-    field :name, non_null(:string),
-      resolve: Lookup.path([:move, :name])
+    field :name, non_null(:string), resolve: Lookup.path([:move, :name])
 
     @desc "Power of the move"
-    field :power, :integer,
-      resolve: Lookup.path([:move, :power])
+    field :power, :integer, resolve: Lookup.path([:move, :power])
 
     @desc "PP of the move"
-    field :pp, non_null(:integer),
-      resolve: Lookup.path([:move, :pp])
+    field :pp, non_null(:integer), resolve: Lookup.path([:move, :pp])
 
     @desc "Effect of the move"
-    field :effect, non_null(:string),
-      resolve: &Move.effect(&1.move, &2, &3)
+    field :effect, non_null(:string), resolve: &Move.effect(&1.move, &2, &3)
 
     @desc "How the move can be acquired by the pokemon"
     field :move_method, :move_method, resolve: assoc(:move_method)
@@ -102,10 +97,11 @@ defmodule Pokedex.Schema.Types do
 
     @desc "A list of the pokemon types"
     field :types, list_of(:string),
-      resolve: Lookup.assoc_lookup(
-        {:pokemon_types, &Pokedex.Pokemon.Query.ordered_types/1},
-        [:type, :name]
-      )
+      resolve:
+        Lookup.assoc_lookup(
+          {:pokemon_types, &Pokedex.Pokemon.Query.ordered_types/1},
+          [:type, :name]
+        )
 
     @desc "A list of types the pokemon is weak against"
     field :weaknesses, list_of(:string),
@@ -116,14 +112,12 @@ defmodule Pokedex.Schema.Types do
       resolve: Lookup.assoc_lookup(:strengths, :name)
 
     @desc "A list of moves the pokemon can acquire"
-    field :moves, list_of(:move), resolve: Pokemon.moves
+    field :moves, list_of(:move), resolve: Pokemon.moves()
 
     @desc "The evolution chain for the pokemon"
-    field :evolutions, list_of(:pokemon),
-      resolve: &Pokemon.evolutions/3
+    field :evolutions, list_of(:pokemon), resolve: &Pokemon.evolutions/3
 
     @desc "URL location of the image for the pokemon"
-    field :image, non_null(:string),
-      resolve: &Pokemon.image/3
+    field :image, non_null(:string), resolve: &Pokemon.image/3
   end
 end
