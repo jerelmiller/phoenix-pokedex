@@ -28,6 +28,7 @@ defmodule Pokedex.Pokemon do
 
     has_many :pokemon_moves, PokemonMove
     has_many :pokemon_types, PokemonType
+    has_many :moves, through: [:pokemon_moves, :move]
 
     many_to_many :types, Type, join_through: PokemonType
     many_to_many :weaknesses, Type, join_through: PokemonWeakness
