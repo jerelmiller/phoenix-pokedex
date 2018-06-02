@@ -2,7 +2,8 @@ defmodule Pokedex.Schema.Types do
   use Absinthe.Schema.Notation
 
   alias Pokedex.Resolvers.{Lookup, Pokemon, Move}
-  import Absinthe.Resolution.Helpers, only: [dataloader: 1]
+  import Absinthe.Resolution.Helpers
+  import PokedexWeb.Schema.ResolutionHelpers
 
   @desc "Units of length"
   enum :length_unit do
