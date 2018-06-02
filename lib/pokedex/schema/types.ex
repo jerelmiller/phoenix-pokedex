@@ -114,7 +114,7 @@ defmodule Pokedex.Schema.Types do
       resolve: Lookup.assoc_lookup(:strengths, :name)
 
     @desc "A list of moves the pokemon can acquire"
-    field :moves, list_of(:move), resolve: Pokemon.moves()
+    field :moves, list_of(:move), resolve: &Resolvers.Pokemon.moves/3
 
     @desc "The evolution chain for the pokemon"
     field :evolutions, list_of(:pokemon),

@@ -23,8 +23,14 @@ defmodule Pokedex.Resolvers.Pokemon do
     end
   end
 
-  # assoc(:pokemon_moves, &preload_moves/3)
-  def moves, do: nil
+  def moves(pokemon, _, _) do
+    moves =
+      pokemon
+      |> Ecto.assoc(:moves)
+      |> Repo.all()
+
+    {:ok, moves}
+  end
 
   def evolutions(pokemon, _, _) do
     evolutions =
@@ -77,7 +83,6 @@ defmodule Pokedex.Resolvers.Pokemon do
 
   def height(pokemon, _, _), do: height(pokemon, %{unit: :meter}, nil)
 
-  defp preload_moves(query, _, _), do: Query.preload_moves(query)
   defp base_url, do: PokedexWeb.Endpoint.url()
 
   defp resolve_types(pokemon_types) do
