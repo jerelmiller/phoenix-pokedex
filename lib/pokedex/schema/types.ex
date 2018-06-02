@@ -121,6 +121,6 @@ defmodule Pokedex.Schema.Types do
       resolve: &Resolvers.Pokemon.evolutions/3
 
     @desc "URL location of the image for the pokemon"
-    field :image, non_null(:string), resolve: &Pokemon.image/3
+    field :image, non_null(:string), resolve: &Resolvers.Pokemon.image/3
   end
 end
