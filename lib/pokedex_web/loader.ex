@@ -1,3 +1,9 @@
 defmodule PokedexWeb.Loader do
-  def define(context), do: context
+  alias Pokedex.GenericLoader
+
+  def define(context) do
+    Dataloader.new()
+    |> Dataloader.add_source(:move_methods, GenericLoader.source(context))
+    |> Dataloader.add_source(:moves, GenericLoader.source(context))
+  end
 end
