@@ -1,6 +1,5 @@
 defmodule Pokedex.Schema.Types do
   use Absinthe.Schema.Notation
-  use Absinthe.Ecto, repo: Pokedex.Repo
 
   alias Pokedex.Resolvers.{Lookup, Pokemon, Move}
 
