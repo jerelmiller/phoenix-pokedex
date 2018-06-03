@@ -40,10 +40,10 @@ defmodule Pokedex.Schema.Types do
     field :pp, non_null(:integer), resolve: Lookup.path([:move, :pp])
 
     @desc "Effect of the move"
-    field :effect, non_null(:string), resolve: &Move.effect(&1.move, &2, &3)
+    field :effect, non_null(:string), resolve: &Resolvers.Move.effect/3
 
     @desc "How the move can be acquired by the pokemon"
-    field :move_method, :move_method, resolve: dataloader(:move_method)
+    field :move_method, :move_method, resolve: &Resolvers.Move.move_method/3
   end
 
   @desc "Represents how a move is acquired by a pokemon"

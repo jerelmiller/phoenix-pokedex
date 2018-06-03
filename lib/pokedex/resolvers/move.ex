@@ -1,5 +1,7 @@
 defmodule Pokedex.Resolvers.Move do
-  def effect(move, _, _) do
+  alias Pokedex.Repo
+
+  def effect(%{move: move}, _, _) do
     description =
       move.effect.description
       |> sub_chance(move.effect_chance)
@@ -7,6 +9,8 @@ defmodule Pokedex.Resolvers.Move do
 
     {:ok, description}
   end
+
+  def move_method(%{move_method: move_method}, _, _), do: {:ok, move_method}
 
   defp sub_chance(description, chance) when is_nil(chance), do: description
 
