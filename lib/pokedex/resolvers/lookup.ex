@@ -1,6 +1,19 @@
 defmodule Pokedex.Resolvers.Lookup do
   alias Pokedex.Repo
 
+  def assoc_lookup({association, query}, field) do
+    fn parent, _, _ ->
+      field =
+        parent
+        |> Ecto.assoc(association)
+        |> query.()
+        |> Repo.all()
+        |> Enum.map(&extract_nested_value(&1, field))
+
+      {:ok, field}
+    end
+  end
+
   def assoc_lookup(association, field) do
     fn parent, _, _ ->
       field =
