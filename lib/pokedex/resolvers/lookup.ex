@@ -3,14 +3,13 @@ defmodule Pokedex.Resolvers.Lookup do
 
   def assoc_lookup(association, field) do
     fn parent, _, _ ->
-      nil
-      # ecto_batch(Repo, parent, association, fn
-      #   records when is_list(records) ->
-      #     {:ok, Enum.map(records, &extract_nested_value(&1, field))}
+      field =
+        parent
+        |> Ecto.assoc(association)
+        |> Repo.all()
+        |> Enum.map(&extract_nested_value(&1, field))
 
-      #   record ->
-      #     {:ok, extract_nested_value(record, field)}
-      # end)
+      {:ok, field}
     end
   end
 
