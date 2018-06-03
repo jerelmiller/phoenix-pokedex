@@ -26,7 +26,8 @@ defmodule Pokedex.Resolvers.Pokemon do
   def moves(pokemon, _, _) do
     moves =
       pokemon
-      |> Ecto.assoc(:moves)
+      |> Ecto.assoc(:pokemon_moves)
+      |> Query.preload_moves()
       |> Repo.all()
 
     {:ok, moves}
